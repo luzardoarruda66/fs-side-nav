@@ -25,7 +25,7 @@ export default class SideNavNode extends React.Component<
     if (this.state.isOpened && this.props.navIsOpened) {
       nodeClasses.push("opened");
     }
-    if (this.props.siteNavItem.subNavItems) {
+    if (this.props.siteNavItem.subNavItems || this.props.siteNavItem.title === "Projetos") {
       nodeClasses.push("dropdown");
     }
     return (

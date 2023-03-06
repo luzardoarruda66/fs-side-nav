@@ -5,4 +5,6 @@ export default interface ISideNavState {
   isOpened: boolean;
   showDialog?: boolean;
   searchText: string;
+  showRamais?: boolean;
+  showEditLink?: boolean;
 }

@@ -9,24 +9,73 @@ import ISideNavState from "./ISideNavState";
 import { SearchIcon } from "../../assets/SearchIcon";
 import { Dialog } from '@fluentui/react';
 import { SearchModal } from "./searchModal";
+import { SearchRamais } from "./RamaisModal";
+
+const DEFAULT_HISTORY_HANDLER = "OriginalPushStateHandler";
+
 export default class SideNav extends React.Component<
   ISideNavProps,
   ISideNavState
 > {
+  constructor(props) {
+    super(props)
+  }
   private sideNavProvider: ISideNavProvider;
+
 
   state = {
     siteNavItems: [],
     isOpened: true,
     showDialog: false,
-    searchText: ''
+    showRamais: false,
+    searchText: '',
+    showEditLink: document.location.href.indexOf("Mode=Edit") !== -1
   }
 
   public componentWillMount(): void {
     this.sideNavProvider = new SideNavProvider();
   }
 
+  componentDidUpdate(prevProps: Readonly<ISideNavProps>, prevState: Readonly<ISideNavState>, snapshot?: any): void {
+    if (!window[DEFAULT_HISTORY_HANDLER]) {
+      window[DEFAULT_HISTORY_HANDLER] = history.pushState;
+    }
+
+    const _pushState = () => {
+      const _defaultPushState = window[DEFAULT_HISTORY_HANDLER];
+      const _self = this;
+      return function (data: any, title: string, url?: string | null) {
+        _self.setState({
+          showEditLink: url.indexOf('Mode=Edit') !== -1
+        });
+        return _defaultPushState.apply(this, [data, title, url]);
+      };
+    };
+    history.pushState = _pushState();
+  }
+
   public componentDidMount(): void {
+    if (!window[DEFAULT_HISTORY_HANDLER]) {
+      window[DEFAULT_HISTORY_HANDLER] = history.pushState;
+    }
+
+    // Binding to page mode changes
+    const _pushState = () => {
+      const _defaultPushState = window[DEFAULT_HISTORY_HANDLER];
+      // We need the current this context to update the component its state
+      const _self = this;
+      return function (data: any, title: string, url?: string | null) {
+        // We need to call the in context of the component
+        _self.setState({
+          showEditLink: url.indexOf('Mode=Edit') !== -1
+        });
+
+        // Call the original function with the provided arguments
+        // This context is necessary for the context of the history change
+        return _defaultPushState.apply(this, [data, title, url]);
+      };
+    };
+    history.pushState = _pushState();
     document.getElementById('sp-appBar').style.width = '260px';
     window.addEventListener("click", this.handleOutsideClick, true);
 
@@ -51,6 +100,7 @@ export default class SideNav extends React.Component<
         this.setState({ isOpened: true })
       }
     })
+
   }
 
   public render(): JSX.Element {
@@ -60,13 +110,29 @@ export default class SideNav extends React.Component<
     const toggleIconName: string = this.state.isOpened
       ? "DoubleChevronLeft8"
       : "DoubleChevronRight8";
-    console.log(window.location.href)
-    return (
 
+    console.log(this.state.showEditLink)
+    if (this.state.showEditLink) {
+      const clickPublishButton = () => {
+        const publishButton = document.querySelector('[data-automation-id="pageCommandBarPublishButton"]');
+        const discardChanges = document.querySelector('[data-automation-id="discardButton"]');
+        if (publishButton && discardChanges) {
+          console.log(publishButton, )
+          publishButton.addEventListener('click', () => this.setState({ showEditLink: false }))
+          discardChanges.addEventListener('click', () => this.setState({ showEditLink: false }))
+          clearInterval(interval);
+        }
+      }
+      const interval = setInterval(clickPublishButton, 500);
+    }
+
+    return (
       <div
+        id='side-menu-id-to-hide'
         className={`site-menu-panel ms-slideRightIn40 visible-i`}
         style={{
           visibility: "hidden",
+          display: this.state.showEditLink ? 'none' : 'flex'
         }} /* set to hidden then onces css loads it will be visible */
       ><link rel="stylesheet" type="text/css" href='https://fsbioenergia.sharepoint.com/sites/IntranetFS2/CustomStyle/fsbioenergy.css' />
         <div className={siteMenuClass}>
@@ -78,7 +144,7 @@ export default class SideNav extends React.Component<
             this.state.siteNavItems.map(this.renderSideNavNodes)}
           <div className="fixed-links-side-nav" style={{ marginTop: '200px' }}>
             <div className="site-nav-node">
-              <div className="menu" onClick={() => window.location.href = "http://google.com/"}>
+              <div className="menu" onClick={() => this.setState({ showRamais: true })}>
                 <div className="icon-node ms-fadeIn400">
                   <div className="icon ms-fadeIn400">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.45 2.16667C3.5 2.90833 3.625 3.63333 3.825 4.325L2.825 5.325C2.48333 4.325 2.26667 3.26667 2.19167 2.16667H3.45ZM11.6667 12.1833C12.375 12.3833 13.1 12.5083 13.8333 12.5583V13.8C12.7333 13.725 11.675 13.5083 10.6667 13.175L11.6667 12.1833ZM4.25 0.5H1.33333C0.875 0.5 0.5 0.875 0.5 1.33333C0.5 9.15833 6.84167 15.5 14.6667 15.5C15.125 15.5 15.5 15.125 15.5 14.6667V11.7583C15.5 11.3 15.125 10.925 14.6667 10.925C13.6333 10.925 12.625 10.7583 11.6917 10.45C11.6083 10.4167 11.5167 10.4083 11.4333 10.4083C11.2167 10.4083 11.0083 10.4917 10.8417 10.65L9.00833 12.4833C6.65 11.275 4.71667 9.35 3.51667 6.99167L5.35 5.15833C5.58333 4.925 5.65 4.6 5.55833 4.30833C5.25 3.375 5.08333 2.375 5.08333 1.33333C5.08333 0.875 4.70833 0.5 4.25 0.5Z" fill="#14181F" /></svg>
@@ -142,6 +208,13 @@ export default class SideNav extends React.Component<
           onDismiss={() => this.setState({ showDialog: false })}
           dialogContentProps={{ showCloseButton: false }}>
           <SearchModal />
+        </Dialog>
+        <Dialog
+          isOpen={this.state.showRamais}
+          modalProps={{ className: "dialog-box" }}
+          onDismiss={() => this.setState({ showRamais: false })}
+          dialogContentProps={{ showCloseButton: false }}>
+          <SearchRamais isOpen={this.state.showRamais} />
         </Dialog>
         <img src={require('../../assets/logofooter.png')} style={{ display: 'none' }} />
       </div>

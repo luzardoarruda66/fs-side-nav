@@ -15,8 +15,9 @@ export default class SideNavProvider implements ISideNavProvider {
         "SideNavUrl",
         "SideNavIconSvg",
         "SideNavOpenInNewWindow",
-        "SideNavParent/Title"
+        "SideNavParent/Title",
       )
+      .filter('Ativo eq 1')
       .expand("SideNavParent")
       .orderBy("SideNavOrder")
       .usingCaching()
