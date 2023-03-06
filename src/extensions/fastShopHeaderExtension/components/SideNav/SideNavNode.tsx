@@ -15,21 +15,38 @@ export default class SideNavNode extends React.Component<
       isOpened: false,
     };
   }
+  private nodeClasses: string[] = ["site-nav-node"];
+
+  componentDidMount(): void {
+    if (this.props.siteNavItem.subNavItems) {
+      const url: string = (window.location.href).toLowerCase();
+      if (this.props.siteNavItem.subNavItems.filter(item => item.url.toLowerCase() === decodeURI(url).toLowerCase()).length) {
+        this.nodeClasses.push("opened");
+        console.log('aqui')
+        this.setState(
+          {
+            isOpened: !this.state.isOpened
+          },
+          () => this.check()
+        );
+      }
+    }
+  
+  }
 
   public render(): JSX.Element {
-    const nodeClasses: string[] = ["site-nav-node"];
-    const url: string = (window.location.href.split('?') ? window.location.href.split('?')[0] : window.location.href).toLowerCase();
-    if (this.props.siteNavItem.url && this.props.siteNavItem.url.toLowerCase() === url) {
-      nodeClasses.push("active");
+    const url: string = (window.location.href).toLowerCase();
+    if (this.props.siteNavItem.url && this.props.siteNavItem.url.toLowerCase() === decodeURI(url).toLowerCase()) {
+      this.nodeClasses.push("active");
     }
     if (this.state.isOpened && this.props.navIsOpened) {
-      nodeClasses.push("opened");
+      this.nodeClasses.push("opened");
     }
     if (this.props.siteNavItem.subNavItems || this.props.siteNavItem.title === "Projetos") {
-      nodeClasses.push("dropdown");
+      this.nodeClasses.push("dropdown");
     }
     return (
-      <div key={this.props.key} className={nodeClasses.join(" ")}>
+      <div key={this.props.key} className={this.nodeClasses.join(" ")}>
         <div role="menu" onClick={e => this.nodeClick(e)}>
           {(this.props.siteNavItem.svg && (
             <div className="icon-node ms-fadeIn400">
@@ -96,9 +113,6 @@ export default class SideNavNode extends React.Component<
 
   private check(): void {
     const node: Element = ReactDOM.findDOMNode(this.refs.children) as Element;
-    if (!node) {
-      return;
-    }
 
     const rect: ClientRect = node.getBoundingClientRect();
     const space: number = window.innerHeight - (rect.top + rect.height);
