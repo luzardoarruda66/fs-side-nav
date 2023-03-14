@@ -22,7 +22,6 @@ export default class SideNavNode extends React.Component<
       const url: string = (window.location.href).toLowerCase();
       if (this.props.siteNavItem.subNavItems.filter(item => item.url.toLowerCase() === decodeURI(url).toLowerCase()).length) {
         this.nodeClasses.push("opened");
-        console.log('aqui')
         this.setState(
           {
             isOpened: !this.state.isOpened
@@ -31,7 +30,7 @@ export default class SideNavNode extends React.Component<
         );
       }
     }
-  
+
   }
 
   public render(): JSX.Element {
@@ -42,7 +41,7 @@ export default class SideNavNode extends React.Component<
     if (this.state.isOpened && this.props.navIsOpened) {
       this.nodeClasses.push("opened");
     }
-    if (this.props.siteNavItem.subNavItems || this.props.siteNavItem.title === "Projetos") {
+    if (this.props.siteNavItem.subNavItems || this.props.siteNavItem.title === "Projetos" || this.props.siteNavItem.title === "Treinamentos") {
       this.nodeClasses.push("dropdown");
     }
     return (
@@ -113,7 +112,9 @@ export default class SideNavNode extends React.Component<
 
   private check(): void {
     const node: Element = ReactDOM.findDOMNode(this.refs.children) as Element;
-
+    if (!node) {
+      return;
+    }
     const rect: ClientRect = node.getBoundingClientRect();
     const space: number = window.innerHeight - (rect.top + rect.height);
     if (space < 0) {

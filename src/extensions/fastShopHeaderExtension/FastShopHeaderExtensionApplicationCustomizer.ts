@@ -46,7 +46,7 @@ export default class FastShopHeaderExtensionApplicationCustomizer
         console.error('The expected placeholder (Top) was not found.');
         return;
       }
-      if (this._topPlaceholder.domElement && window.location.href.indexOf('Lists/') === -1 && window.location.href.indexOf('_layouts/') === -1 ) {
+      if (this._topPlaceholder.domElement && window.location.href.toLowerCase().indexOf('lists/') === -1 && window.location.href.indexOf('_layouts/') === -1 ) {
         const element = React.createElement(SideNav, {context: this.context});
         ReactDOM.render(element, this._topPlaceholder.domElement);
       }

@@ -117,7 +117,7 @@ export default class SideNav extends React.Component<
         const publishButton = document.querySelector('[data-automation-id="pageCommandBarPublishButton"]');
         const discardChanges = document.querySelector('[data-automation-id="discardButton"]');
         if (publishButton && discardChanges) {
-          console.log(publishButton, )
+          console.log(publishButton,)
           publishButton.addEventListener('click', () => this.setState({ showEditLink: false }))
           discardChanges.addEventListener('click', () => this.setState({ showEditLink: false }))
           clearInterval(interval);
@@ -147,7 +147,8 @@ export default class SideNav extends React.Component<
               <div className="menu" onClick={() => this.setState({ showRamais: true })}>
                 <div className="icon-node ms-fadeIn400">
                   <div className="icon ms-fadeIn400">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.45 2.16667C3.5 2.90833 3.625 3.63333 3.825 4.325L2.825 5.325C2.48333 4.325 2.26667 3.26667 2.19167 2.16667H3.45ZM11.6667 12.1833C12.375 12.3833 13.1 12.5083 13.8333 12.5583V13.8C12.7333 13.725 11.675 13.5083 10.6667 13.175L11.6667 12.1833ZM4.25 0.5H1.33333C0.875 0.5 0.5 0.875 0.5 1.33333C0.5 9.15833 6.84167 15.5 14.6667 15.5C15.125 15.5 15.5 15.125 15.5 14.6667V11.7583C15.5 11.3 15.125 10.925 14.6667 10.925C13.6333 10.925 12.625 10.7583 11.6917 10.45C11.6083 10.4167 11.5167 10.4083 11.4333 10.4083C11.2167 10.4083 11.0083 10.4917 10.8417 10.65L9.00833 12.4833C6.65 11.275 4.71667 9.35 3.51667 6.99167L5.35 5.15833C5.58333 4.925 5.65 4.6 5.55833 4.30833C5.25 3.375 5.08333 2.375 5.08333 1.33333C5.08333 0.875 4.70833 0.5 4.25 0.5Z" fill="#14181F" /></svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3.45 2.16667C3.5 2.90833 3.625 3.63333 3.825 4.325L2.825 5.325C2.48333 4.325 2.26667 3.26667 2.19167 2.16667H3.45ZM11.6667 12.1833C12.375 12.3833 13.1 12.5083 13.8333 12.5583V13.8C12.7333 13.725 11.675 13.5083 10.6667 13.175L11.6667 12.1833ZM4.25 0.5H1.33333C0.875 0.5 0.5 0.875 0.5 1.33333C0.5 9.15833 6.84167 15.5 14.6667 15.5C15.125 15.5 15.5 15.125 15.5 14.6667V11.7583C15.5 11.3 15.125 10.925 14.6667 10.925C13.6333 10.925 12.625 10.7583 11.6917 10.45C11.6083 10.4167 11.5167 10.4083 11.4333 10.4083C11.2167 10.4083 11.0083 10.4917 10.8417 10.65L9.00833 12.4833C6.65 11.275 4.71667 9.35 3.51667 6.99167L5.35 5.15833C5.58333 4.925 5.65 4.6 5.55833 4.30833C5.25 3.375 5.08333 2.375 5.08333 1.33333C5.08333 0.875 4.70833 0.5 4.25 0.5Z" fill="#14181F" /></svg>
                   </div>
                   {this.state.isOpened &&
                     <div className="title noselect">
@@ -157,7 +158,7 @@ export default class SideNav extends React.Component<
                 </div>
               </div>
             </div>
-            <div className="site-nav-node">
+            {/*             <div className="site-nav-node">
               <div className="menu" onClick={() => window.location.href = "http://google.com/"}>
                 <div className="icon-node ms-fadeIn400">
                   <div className="icon ms-fadeIn400">
@@ -170,16 +171,16 @@ export default class SideNav extends React.Component<
                   }
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="site-nav-node">
-              <div className="menu" onClick={() => window.location.href = "http://google.com/"}>
+              <div className="menu" onClick={() => window.location.href = "https://fsbioenergia.topdesk.net/"}>
                 <div className="icon-node ms-fadeIn400">
                   <div className="icon ms-fadeIn400">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0.5C3.85833 0.5 0.5 3.85833 0.5 8V13.8333C0.5 14.75 1.25 15.5 2.16667 15.5H5.5V8.83333H2.16667V8C2.16667 4.775 4.775 2.16667 8 2.16667C11.225 2.16667 13.8333 4.775 13.8333 8V8.83333H10.5V15.5H13.8333C14.75 15.5 15.5 14.75 15.5 13.8333V8C15.5 3.85833 12.1417 0.5 8 0.5ZM3.83333 10.5V13.8333H2.16667V10.5H3.83333ZM13.8333 13.8333H12.1667V10.5H13.8333V13.8333Z" fill="#14181F" /></svg>
                   </div>
                   {this.state.isOpened &&
                     <div className="title noselect">
-                      Help desk
+                      TopDesk
                     </div>
                   }
                 </div>
